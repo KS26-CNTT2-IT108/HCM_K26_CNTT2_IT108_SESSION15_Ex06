@@ -1,0 +1,38 @@
+SESSION15
+Bài 6 : Hoàn thiện bộ giải pháp quản lý dự án Smart Farm
+
+Tên lớp: HCM K26 CNTT2
+Môn học: Nhập môn công nghệ thông tin 
+Họ và tên: LƯƠNG THANH THƯ
+
+
+Phần 1: Phân tích
+
+IPO: Input là số đo nhiệt độ từ cảm biến, Process là code xử lý, Output là lệnh điều khiển máy bơm và báo cáo.
+DIKW: Data là số đo thô (50MB/ngày), Information là nhiệt độ trung bình theo giờ, Knowledge là “trên 35°C thì cần tưới”, Wisdom là quyết định tưới đúng lúc để tiết kiệm nước.
+Sơ đồ phối hợp:
+LOCAL (trang trại)                          CLOUD WORKSPACE
+Cảm biến --> Bộ điều khiển --> điều khiển bơm
+               |  ghi dữ liệu thô vào ổ Local
+               v
+          Auto Sync (chỉ bản tóm tắt) -----> 02_Data_Summary
+          Lỗi cảm biến --------------------> #canh-bao --> Task có Deadline
+Kỹ sư: sửa code, Ctrl+S, Auto Sync <-------> 01_Code (Version History)
+Nông dân: xem báo cáo, tài liệu (Viewer)
+
+Phần 2: README kiến trúc
+Thư mục: 01_Code, 02_Data_Summary, 03_Docs, 99_Archive.
+Lưu trữ (Chức năng 1): dữ liệu thô giữ ở Local, mỗi ngày chỉ sync bản tóm tắt nhỏ,dữ liệu cũ nén theo tháng vào Archive, bật Files On-Demand để file chỉ tải về khi mở.
+Phân quyền (Chức năng 2): kỹ sư là Editor cho 01_Code, nông dân là Viewer cho 03_Docs và báo cáo, chủ trang trại là Owner. Luôn Restricted, tắt Editor tự chia sẻ.
+Giao tiếp (Chức năng 3): tin báo lỗi từ cảm biến vào #canh-bao, mỗi lỗi thành một Task có người phụ trách và Deadline, chỉ tag đích danh.
+Hybrid Workflow: kỹ sư sửa code trên máy, Ctrl+S, Auto Sync, lỡ sai thì Version History để Restore.
+Rà soát hàng tháng: đầu mỗi tháng xem Access Audit Log, xóa quyền người không còn tham gia.
+
+Phần 3: Quy trình 3 bước khi rò rỉ dữ liệu
+Bước 1, thu hồi quyền: đổi về Restricted, xóa tài khoản lạ trong Manage access, đổi mật khẩu và bật xác minh 2 bước.
+Bước 2, kiểm tra Audit Log: xem ai đã mở, tải, chia sẻ file, lúc nào, từ tài khoản nào để tìm nguồn rò rỉ.
+Bước 3, xử lý hậu quả: đổi các khóa bí mật bị lộ, thông báo người bị ảnh hưởng, siết lại quy trình phân quyền.
+
+
+
+
